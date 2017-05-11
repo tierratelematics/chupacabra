@@ -5,7 +5,7 @@ class HttpResponse<T> {
     status: number;
     headers: Dictionary<string>;
 
-    constructor(response: T, status: number, headers: Dictionary<string>) {
+    constructor(response: T, status: number, headers?: Dictionary<string>) {
         this.response = response;
         this.status = status;
         this.headers = headers;

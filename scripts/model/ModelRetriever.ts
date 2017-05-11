@@ -1,5 +1,5 @@
 import IModelRetriever from "./IModelRetriever";
-import * as Rx from "rx";
+import {Observable} from "rx";
 import INotificationManager from "../notifications/INotificationManager";
 import {IParametersDeserializer, NullParametersDeserializer} from "./ParametersDeserializer";
 import {stringify} from "qs";
@@ -14,16 +14,13 @@ class ModelRetriever implements IModelRetriever {
 
     }
 
-    modelFor<T>(context: ModelContext): Rx.Observable<ModelState<T>> {
-        let query = this.buildQueryForContext(context);
+    modelFor<T>(context: ModelContext): Observable<T> {
         return this.notificationManager.notificationsFor(context)
-            .selectMany(notification => this.httpClient.get(notification.url + query))
-            .map(response => ModelState.Ready(<T>response.response))
-            .catch(error => Rx.Observable.just(ModelState.Failed(error)))
-            .startWith(<ModelState<T>>ModelState.Loading());
+            .selectMany(notification => this.httpClient.get(notification.url + this.buildQueryForContext(context)))
+            .map(response => <T>response.response)
     }
 
-    private buildQueryForContext(context: ViewModelContext): string {
+    private buildQueryForContext(context: ModelContext): string {
         let parameters = this.parametersDeserializer.deserialize(context);
         let query = "";
         if (parameters) {
