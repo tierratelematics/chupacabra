@@ -1,13 +1,11 @@
 import INotificationManager from "./INotificationManager";
 import Notification from "./Notification";
 import {Observable} from "rx";
-import {injectable, inject} from "inversify";
 import ModelContext from "../model/ModelContext";
 
-@injectable()
 class NotificationManager implements INotificationManager {
 
-    constructor(@inject("SocketIOClient.Socket") private client: SocketIOClient.Socket) {
+    constructor(private client: SocketIOClient.Socket) {
 
     }
 

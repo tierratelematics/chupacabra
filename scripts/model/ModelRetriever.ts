@@ -1,17 +1,16 @@
 import IModelRetriever from "./IModelRetriever";
-import {injectable, inject, optional} from "inversify";
 import * as Rx from "rx";
 import INotificationManager from "../notifications/INotificationManager";
 import {IParametersDeserializer, NullParametersDeserializer} from "./ParametersDeserializer";
 import {stringify} from "qs";
 import ModelContext from "./ModelContext";
+import IHttpClient from "../net/IHttpClient";
 
-@injectable()
 class ModelRetriever implements IModelRetriever {
 
-    constructor(@inject("IHttpClient") private httpClient: IHttpClient,
-                @inject("INotificationManager") private notificationManager: INotificationManager,
-                @inject("IParametersDeserializer") @optional() private parametersDeserializer: IParametersDeserializer = new NullParametersDeserializer()) {
+    constructor(private httpClient: IHttpClient,
+                private notificationManager: INotificationManager,
+                private parametersDeserializer: IParametersDeserializer = new NullParametersDeserializer()) {
 
     }
 
