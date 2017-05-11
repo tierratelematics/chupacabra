@@ -9,7 +9,7 @@
       "mocha",
       "node",
       "reflect-metadata",
-      "leaflet-draw"
+      "socket.io-client"
     ],
     "lib": [
       "es5",
