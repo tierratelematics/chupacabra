@@ -1,4 +1,3 @@
-import "reflect-metadata";
 import expect = require("expect.js");
 import {Observable} from "rx";
 import {IMock, Mock, Times, It} from "typemoq";

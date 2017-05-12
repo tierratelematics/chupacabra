@@ -1,4 +1,3 @@
-import "reflect-metadata";
 import expect = require("expect.js");
 import {IMock, Mock, Times, It} from "typemoq"
 import NotificationManager from "../scripts/notifications/NotificationManager";
