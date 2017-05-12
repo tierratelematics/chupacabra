@@ -1,6 +1,6 @@
 interface ModelContext {
-    area:string;
-    modelId:string;
+    area: string;
+    modelId: string;
     parameters?: object;
 }
 
