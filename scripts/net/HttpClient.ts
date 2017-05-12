@@ -1,4 +1,4 @@
-import "whatwg-fetch";
+import "isomorphic-fetch";
 import IHttpClient from "./IHttpClient";
 import {Observable} from "rx";
 import HttpResponse from "./HttpResponse";
