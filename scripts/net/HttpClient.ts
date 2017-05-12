@@ -1,4 +1,4 @@
-import "whatwg-fetch";
+import "isomorphic-fetch";
 import IHttpClient from "./IHttpClient";
 import {Observable} from "rx";
 import HttpResponse from "./HttpResponse";
@@ -11,7 +11,7 @@ class HttpClient implements IHttpClient {
     }
 
     private performNetworkCall(url: string, method: string, body?: any, headers?: Dictionary<string>): Observable<HttpResponse> {
-        let promise = window.fetch(url, {
+        let promise = fetch(url, {
             method: method,
             body: body,
             headers: headers
