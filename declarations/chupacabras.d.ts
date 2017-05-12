@@ -1,9 +1,11 @@
 import {Observable} from "rx";
 
-export interface ModelContext {
+export class ModelContext {
     area: string;
     modelId: string;
     parameters?: object;
+
+    constructor(area: string, modelId: string, parameters?: object);
 }
 
 export interface IModelRetriever {
