@@ -32,11 +32,11 @@ export class NotificationManager implements INotificationManager {
 }
 
 interface Notification {
-    url: string
+    url: string;
 }
 
 export interface IParametersDeserializer {
-    deserialize(context: ModelContext): {};
+    deserialize(context: ModelContext): object;
 }
 
 export interface IHttpClient {
@@ -55,5 +55,5 @@ export class HttpResponse<T> {
 }
 
 interface Dictionary<T> {
-    [index: string]: T
+    [index: string]: T;
 }
