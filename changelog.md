@@ -1,3 +1,7 @@
+# 1.0.0
+
+Use refCounts to dispose prettygoat subscriptions
+
 # 0.2.1
 
 Change parameters deserializer return signature
