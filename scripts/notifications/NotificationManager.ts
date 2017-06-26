@@ -15,7 +15,24 @@ class NotificationManager implements INotificationManager {
     }
 
     protected getNotificationStream(context: ModelContext): Observable<Notification> {
-        return Observable.fromEvent<Notification>(this.client, keyFor(context));
+        return Observable
+            .fromEvent<Notification>(this.client, keyFor(context))
+            .combineLatest(this.getConnectionObservable(), (notification, connection) => {
+            return notification;
+        } );
+    }
+
+    private getConnectionObservable(): Observable<any> {
+        return Observable.create((observer) => {
+            if (this.client.disconnected) observer.onError("SocketIOClient disconnected");
+            if (this.client.connected) observer.onNext("SocketIOClient connected");
+            this.client.on("connect_error", (error) => {
+                observer.onError(error);
+            });
+            this.client.on("connect", (data) => {
+                observer.onNext(data);
+            });
+        });
     }
 
     private subscribeToChannel(context: ModelContext): void {
