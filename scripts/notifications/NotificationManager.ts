@@ -32,6 +32,7 @@ class NotificationManager implements INotificationManager {
                 observer.onNext(data);
             });
         });
+            else if (this.client.disconnected) observer.onError(new Error("SocketIOClient disconnected"));
     }
 
     private subscribeToChannel(context: ModelContext): void {
