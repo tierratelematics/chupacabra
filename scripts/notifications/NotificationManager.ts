@@ -1,13 +1,14 @@
 import INotificationManager from "./INotificationManager";
 import Notification from "./Notification";
-import { Observable } from "rx";
+import {Observable} from "rx";
 import ModelContext from "../model/ModelContext";
 
 class NotificationManager implements INotificationManager {
 
     private refCounts: { [key: string]: number } = {};
 
-    constructor(private client: SocketIOClient.Socket) { }
+    constructor(private client: SocketIOClient.Socket) {
+    }
 
     notificationsFor(context: ModelContext): Observable<Notification> {
         this.subscribeToChannel(context);
@@ -15,7 +16,26 @@ class NotificationManager implements INotificationManager {
     }
 
     protected getNotificationStream(context: ModelContext): Observable<Notification> {
-        return Observable.fromEvent<Notification>(this.client, keyFor(context));
+        return this.getConnectionObservable()
+            .take(1)
+            .flatMap(() => Observable.fromEvent<Notification>(this.client, keyFor(context)));
+    }
+
+    private getConnectionObservable(): Observable<void> {
+        return Observable.create<void>((observer) => {
+            if (this.client.connected) {
+                observer.onNext(null);
+            } else if (this.client.disconnected) {
+                observer.onError(new Error("SocketIOClient disconnected"));
+            } else {
+                this.client.on("connect", () => {
+                    observer.onNext(null);
+                });
+                this.client.on("connect_error", (error) => {
+                    observer.onError(error);
+                });
+            }
+        });
     }
 
     private subscribeToChannel(context: ModelContext): void {
