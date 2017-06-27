@@ -22,7 +22,7 @@ class NotificationManager implements INotificationManager {
     }
 
     private getConnectionObservable(): Observable<void> {
-        return Observable.create((observer) => {
+        return Observable.create<void>((observer) => {
             if (this.client.connected) {
                 observer.onNext(null);
             } else if (this.client.disconnected) {
