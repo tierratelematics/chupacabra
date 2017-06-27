@@ -1,3 +1,7 @@
+# 1.0.1
+
+Propagate connection error
+
 # 1.0.0
 
 Use refCounts to dispose prettygoat subscriptions
