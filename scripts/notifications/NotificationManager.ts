@@ -1,13 +1,14 @@
 import INotificationManager from "./INotificationManager";
 import Notification from "./Notification";
-import { Observable } from "rx";
+import {Observable} from "rx";
 import ModelContext from "../model/ModelContext";
 
 class NotificationManager implements INotificationManager {
 
     private refCounts: { [key: string]: number } = {};
 
-    constructor(private client: SocketIOClient.Socket) { }
+    constructor(private client: SocketIOClient.Socket) {
+    }
 
     notificationsFor(context: ModelContext): Observable<Notification> {
         this.subscribeToChannel(context);
@@ -15,26 +16,26 @@ class NotificationManager implements INotificationManager {
     }
 
     protected getNotificationStream(context: ModelContext): Observable<Notification> {
-        let notificationObservable = Observable.fromEvent<Notification>(this.client, keyFor(context));
         return this.getConnectionObservable()
-            .flatMap(notificationObservable, (connection, notification: Notification) => {
-            return notification;
-        });
+            .take(1)
+            .flatMap(() => Observable.fromEvent<Notification>(this.client, keyFor(context)));
     }
 
-    private getConnectionObservable(): Observable<any> {
+    private getConnectionObservable(): Observable<void> {
         return Observable.create((observer) => {
-            if (this.client.connected) observer.onNext("SocketIOClient connected");
-            else if (this.client.disconnected) observer.onError(new Error("SocketIOClient disconnected"));
-            else {
-                this.client.on("connect", (data) => {
-                    observer.onNext(data);
+            if (this.client.connected) {
+                observer.onNext(null);
+            } else if (this.client.disconnected) {
+                observer.onError(new Error("SocketIOClient disconnected"));
+            } else {
+                this.client.on("connect", () => {
+                    observer.onNext(null);
                 });
                 this.client.on("connect_error", (error) => {
                     observer.onError(error);
                 });
             }
-        }).take(1);
+        });
     }
 
     private subscribeToChannel(context: ModelContext): void {
