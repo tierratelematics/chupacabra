@@ -5,6 +5,7 @@ import {IParametersDeserializer, NullParametersDeserializer} from "./ParametersD
 import {stringify} from "qs";
 import ModelContext from "./ModelContext";
 import IHttpClient from "../net/IHttpClient";
+import {isEmpty} from "lodash";
 
 class ModelRetriever implements IModelRetriever {
 
@@ -22,8 +23,9 @@ class ModelRetriever implements IModelRetriever {
 
     private buildQueryForContext(context: ModelContext, notificationKey: string): string {
         let parameters: any = this.parametersDeserializer.deserialize(context) || {};
-        parameters.modelKey = notificationKey;
-        return `?${stringify(parameters)}`;
+        if (notificationKey)
+            parameters.modelKey = notificationKey;
+        return isEmpty(parameters) ? "" : `?${stringify(parameters)}`;
     }
 }
 
