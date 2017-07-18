@@ -16,17 +16,14 @@ class ModelRetriever implements IModelRetriever {
 
     modelFor<T>(context: ModelContext): Observable<T> {
         return this.notificationManager.notificationsFor(context)
-            .selectMany(notification => this.httpClient.get(notification.url + this.buildQueryForContext(context)))
-            .map(response => <T>response.response)
+            .selectMany(notification => this.httpClient.get(notification.url + this.buildQueryForContext(context, notification.notificationKey)))
+            .map(response => <T>response.response);
     }
 
-    private buildQueryForContext(context: ModelContext): string {
-        let parameters = this.parametersDeserializer.deserialize(context);
-        let query = "";
-        if (parameters) {
-            query += `?${stringify(parameters)}`;
-        }
-        return query;
+    private buildQueryForContext(context: ModelContext, notificationKey: string): string {
+        let parameters: any = this.parametersDeserializer.deserialize(context) || {};
+        parameters.modelKey = notificationKey;
+        return `?${stringify(parameters)}`;
     }
 }
 
