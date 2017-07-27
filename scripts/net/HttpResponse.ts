@@ -1,6 +1,6 @@
 import Dictionary from "../util/Dictionary";
 
-class HttpResponse<T> {
+class HttpResponse<T = any> {
     response: T;
     status: number;
     headers: Dictionary<string>;
