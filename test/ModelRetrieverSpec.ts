@@ -22,11 +22,14 @@ describe("Model retriever, given an area and a model id", () => {
         parametersDeserializer = Mock.ofType<IParametersDeserializer>();
         subject = new ModelRetriever(httpClient.object, notificationManager.object, parametersDeserializer.object);
         notificationManager.setup(n => n.notificationsFor(It.isAny())).returns(context => {
-            return Observable.just({url: 'http://testurl/' + (context.parameters ? context.parameters.id : "")});
+            return Observable.just({
+                url: "http://testurl/",
+                notificationKey: context.parameters ? context.parameters.id : ""
+            });
         });
         httpClient.setup(h => h.get("http://testurl/")).returns(() => Observable.just(new HttpResponse({count: 20}, 200)));
-        httpClient.setup(h => h.get("http://testurl/60")).returns(() => Observable.just(new HttpResponse({count: 60}, 200)));
-        httpClient.setup(h => h.get("http://testurl/60?id=60")).returns(() => Observable.just(new HttpResponse({count: 60}, 200)));
+        httpClient.setup(h => h.get("http://testurl/?modelKey=60")).returns(() => Observable.just(new HttpResponse({count: 60}, 200)));
+        httpClient.setup(h => h.get("http://testurl/?test=50&modelKey=60")).returns(() => Observable.just(new HttpResponse({count: 60}, 200)));
     });
 
     context("when requesting a context", () => {
@@ -55,30 +58,13 @@ describe("Model retriever, given an area and a model id", () => {
                 parametersDeserializer
                     .setup(p => p.deserialize(It.isValue(new ModelContext("Admin", "Bar", {id: 60}))))
                     .returns(() => {
-                        return {id: 60};
+                        return {test: 50};
                     });
             });
             it("should pass those parameters in the query string", () => {
                 subject.modelFor<any>(new ModelContext("Admin", "Bar", {id: 60})).subscribe();
 
-                httpClient.verify(h => h.get("http://testurl/60?id=60"), Times.once());
-            });
-        });
-
-        context("and parameters aren't needed on the backend side", () => {
-            beforeEach(() => {
-                parametersDeserializer
-                    .setup(p => p.deserialize(It.isValue({
-                        area: "Admin",
-                        modelId: "NoParameter",
-                        parameters: {id: 60}
-                    })))
-                    .returns(() => null);
-            });
-            it("should keep the query string empty", () => {
-                subject.modelFor<any>(new ModelContext("Admin", "NoParameter", {id: 60})).subscribe();
-
-                httpClient.verify(h => h.get("http://testurl/60"), Times.once());
+                httpClient.verify(h => h.get("http://testurl/?test=50&modelKey=60"), Times.once());
             });
         });
     });

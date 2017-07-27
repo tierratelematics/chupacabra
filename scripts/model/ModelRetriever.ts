@@ -5,6 +5,7 @@ import {IParametersDeserializer, NullParametersDeserializer} from "./ParametersD
 import {stringify} from "qs";
 import ModelContext from "./ModelContext";
 import IHttpClient from "../net/IHttpClient";
+import {isEmpty} from "lodash";
 
 class ModelRetriever implements IModelRetriever {
 
@@ -16,17 +17,15 @@ class ModelRetriever implements IModelRetriever {
 
     modelFor<T>(context: ModelContext): Observable<T> {
         return this.notificationManager.notificationsFor(context)
-            .selectMany(notification => this.httpClient.get(notification.url + this.buildQueryForContext(context)))
-            .map(response => <T>response.response)
+            .selectMany(notification => this.httpClient.get(notification.url + this.buildQueryForContext(context, notification.notificationKey)))
+            .map(response => <T>response.response);
     }
 
-    private buildQueryForContext(context: ModelContext): string {
-        let parameters = this.parametersDeserializer.deserialize(context);
-        let query = "";
-        if (parameters) {
-            query += `?${stringify(parameters)}`;
-        }
-        return query;
+    private buildQueryForContext(context: ModelContext, notificationKey: string): string {
+        let parameters: any = this.parametersDeserializer.deserialize(context) || {};
+        if (notificationKey)
+            parameters.modelKey = notificationKey;
+        return isEmpty(parameters) ? "" : `?${stringify(parameters)}`;
     }
 }
 

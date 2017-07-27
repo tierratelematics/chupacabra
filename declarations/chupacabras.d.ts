@@ -33,6 +33,7 @@ export class NotificationManager implements INotificationManager {
 
 interface Notification {
     url: string;
+    notificationKey: string;
 }
 
 export interface IParametersDeserializer {

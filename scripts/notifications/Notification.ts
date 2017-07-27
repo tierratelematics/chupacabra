@@ -1,5 +1,6 @@
 interface Notification {
-    url:string;
+    url: string;
+    notificationKey: string;
 }
 
 export default Notification
