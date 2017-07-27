@@ -7,7 +7,7 @@ import Dictionary from "../util/Dictionary";
 class HttpClient implements IHttpClient {
 
     get(url: string, headers?: Dictionary<string>): Observable<HttpResponse> {
-        return this.performNetworkCall(url, 'get', undefined, headers);
+        return this.performNetworkCall(url, "get", undefined, headers);
     }
 
     private performNetworkCall(url: string, method: string, body?: any, headers?: Dictionary<string>): Observable<HttpResponse> {
@@ -16,14 +16,14 @@ class HttpClient implements IHttpClient {
             body: body,
             headers: headers
         }).then(response => {
-            let headers: Dictionary<string> = {};
+            let head: Dictionary<string> = {};
             response.headers.forEach((value, name) => {
-                headers[name.toString().toLowerCase()] = value;
+                head[name.toString().toLowerCase()] = value;
             });
             return response.text().then(text => {
-                let contentType = headers['content-type'] || "";
+                let contentType = head["content-type"] || "";
                 let payload = contentType.match("application/json") ? JSON.parse(text) : text;
-                let httpResponse = new HttpResponse(payload, response.status, headers);
+                let httpResponse = new HttpResponse(payload, response.status, head);
 
                 if (response.status >= 400)
                     throw httpResponse;

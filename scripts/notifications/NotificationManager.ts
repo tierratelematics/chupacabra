@@ -25,15 +25,10 @@ class NotificationManager implements INotificationManager {
         return Observable.create<void>((observer) => {
             if (this.client.connected) {
                 observer.onNext(null);
-            } else if (this.client.disconnected) {
-                observer.onError(new Error("SocketIOClient disconnected"));
             } else {
-                this.client.on("connect", () => {
-                    observer.onNext(null);
-                });
-                this.client.on("connect_error", (error) => {
-                    observer.onError(error);
-                });
+                this.client.on("connect", () => observer.onNext(null));
+                this.client.on("connect_error", error => observer.onError(error));
+                this.client.on("disconnect", error => observer.onError(error));
             }
         });
     }

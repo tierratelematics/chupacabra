@@ -1,8 +1,8 @@
 {
   "name": "chupacabras",
-  "version": "1.0.1",
+  "version": "2.0.0-0",
   "dependencies": {
-    "@types/lodash": "4.14.44",
+    "@types/lodash": "4.14.64",
     "@types/node": "~6.0.52",
     "@types/qs": "~6.2.30",
     "@types/socket.io-client": "~1.4.29",
