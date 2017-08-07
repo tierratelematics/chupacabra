@@ -14,8 +14,7 @@ export interface IModelRetriever {
 
 export class ModelRetriever implements IModelRetriever {
 
-    constructor(httpClient: IHttpClient, notificationManager: INotificationManager,
-                parametersDeserializer: IParametersDeserializer);
+    constructor(httpClient: IHttpClient, notificationManager: INotificationManager);
 
     modelFor<T>(context: ModelContext): Observable<T>;
 }
@@ -34,10 +33,6 @@ export class NotificationManager implements INotificationManager {
 interface Notification {
     url: string;
     notificationKey: string;
-}
-
-export interface IParametersDeserializer {
-    deserialize(context: ModelContext): object;
 }
 
 export interface IHttpClient {
