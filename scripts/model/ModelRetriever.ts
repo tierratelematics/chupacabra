@@ -13,8 +13,11 @@ class ModelRetriever implements IModelRetriever {
     }
 
     modelFor<T>(context: ModelContext): Observable<T> {
-        let qs = stringify(context.parameters);
+        let qs = stringify(context.parameters),
+            lastTimestamp = null;
         return this.notificationManager.notificationsFor(context)
+            .filter(notification => notification.timestamp >= lastTimestamp)
+            .do(notification => lastTimestamp = notification.timestamp)
             .selectMany(notification => this.httpClient.get(notification.url + (qs ? `?${qs}` : "")))
             .map(response => <T>response.response);
     }

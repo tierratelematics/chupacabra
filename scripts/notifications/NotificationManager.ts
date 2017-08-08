@@ -18,7 +18,11 @@ class NotificationManager implements INotificationManager {
     protected getNotificationStream(context: ModelContext): Observable<Notification> {
         return this.getConnectionObservable()
             .take(1)
-            .flatMap(() => Observable.fromEvent<Notification>(this.client, keyFor(context)));
+            .flatMap(() => Observable.fromEvent<Notification>(this.client, keyFor(context)))
+            .map(notification => {
+                notification.timestamp = new Date(notification.timestamp);
+                return notification;
+            });
     }
 
     private getConnectionObservable(): Observable<void> {
