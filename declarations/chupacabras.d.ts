@@ -54,5 +54,5 @@ interface Dictionary<T> {
 }
 
 export class ContextOperations {
-    static getRoom(context: ModelContext, notificationKey?: string): string;
+    static keyFor(context: ModelContext, notificationKey?: string): string;
 }

@@ -19,7 +19,7 @@ class NotificationManager implements INotificationManager {
     protected getNotificationStream(context: ModelContext, notificationKey: string): Observable<Notification> {
         return this.getConnectionObservable()
             .take(1)
-            .flatMap(() => Observable.fromEvent<Notification>(this.client, ContextOperations.getRoom(context, notificationKey)))
+            .flatMap(() => Observable.fromEvent<Notification>(this.client, ContextOperations.keyFor(context, notificationKey)))
             .map(notification => {
                 notification.timestamp = new Date(notification.timestamp);
                 return notification;
@@ -39,14 +39,14 @@ class NotificationManager implements INotificationManager {
     }
 
     private subscribeToChannel(context: ModelContext, notificationKey: string): void {
-        let room = ContextOperations.getRoom(context, notificationKey);
+        let room = ContextOperations.keyFor(context, notificationKey);
         this.operateOnChannel("subscribe", context);
         if (!this.refCounts[room]) this.refCounts[room] = 1;
         else this.refCounts[room]++;
     }
 
     private unsubscribeFromChannel(context: ModelContext, notificationKey: string): void {
-        let room = ContextOperations.getRoom(context, notificationKey);
+        let room = ContextOperations.keyFor(context, notificationKey);
         this.refCounts[room]--;
         if (this.refCounts[room] > 0) return;
 
