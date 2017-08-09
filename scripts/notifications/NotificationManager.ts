@@ -21,7 +21,7 @@ class NotificationManager implements INotificationManager {
             .take(1)
             .flatMap(() => Observable.fromEvent<Notification>(this.client, ContextOperations.keyFor(context, notificationKey)))
             .map(notification => {
-                notification.timestamp = new Date(notification.timestamp);
+                notification.timestamp = notification.timestamp ? new Date(notification.timestamp) : null;
                 return notification;
             });
     }
@@ -39,19 +39,19 @@ class NotificationManager implements INotificationManager {
     }
 
     private subscribeToChannel(context: ModelContext, notificationKey: string): void {
-        let room = ContextOperations.keyFor(context, notificationKey);
+        let key = ContextOperations.keyFor(context, notificationKey);
         this.operateOnChannel("subscribe", context);
-        if (!this.refCounts[room]) this.refCounts[room] = 1;
-        else this.refCounts[room]++;
+        if (!this.refCounts[key]) this.refCounts[key] = 1;
+        else this.refCounts[key]++;
     }
 
     private unsubscribeFromChannel(context: ModelContext, notificationKey: string): void {
-        let room = ContextOperations.keyFor(context, notificationKey);
-        this.refCounts[room]--;
-        if (this.refCounts[room] > 0) return;
+        let key = ContextOperations.keyFor(context, notificationKey);
+        this.refCounts[key]--;
+        if (this.refCounts[key] > 0) return;
 
         this.operateOnChannel("unsubscribe", context);
-        delete this.refCounts[room];
+        delete this.refCounts[key];
     }
 
     private operateOnChannel(operation: string, context: ModelContext): void {
