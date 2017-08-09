@@ -9,25 +9,25 @@ export class ModelContext {
 }
 
 export interface IModelRetriever {
-    modelFor<T>(context: ModelContext): Observable<T>;
+    modelFor<T>(context: ModelContext, notificationKey?: string): Observable<T>;
 }
 
 export class ModelRetriever implements IModelRetriever {
 
     constructor(httpClient: IHttpClient, notificationManager: INotificationManager);
 
-    modelFor<T>(context: ModelContext): Observable<T>;
+    modelFor<T>(context: ModelContext, notificationKey?: string): Observable<T>;
 }
 
 export interface INotificationManager {
-    notificationsFor(context: ModelContext): Observable<Notification>;
+    notificationsFor(context: ModelContext, notificationKey?: string): Observable<Notification>;
 }
 
 export class NotificationManager implements INotificationManager {
 
     constructor(client: SocketIOClient.Socket);
 
-    notificationsFor(context: ModelContext): Observable<Notification>;
+    notificationsFor(context: ModelContext, notificationKey?: string): Observable<Notification>;
 }
 
 interface Notification {
@@ -40,7 +40,6 @@ export interface IHttpClient {
 }
 
 export class HttpClient implements IHttpClient {
-
     get(url: string, headers?: Dictionary<string>): Observable<HttpResponse>;
 }
 
