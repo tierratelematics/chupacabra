@@ -1,31 +1,25 @@
 import IModelRetriever from "./IModelRetriever";
 import {Observable} from "rx";
 import INotificationManager from "../notifications/INotificationManager";
-import {IParametersDeserializer, NullParametersDeserializer} from "./ParametersDeserializer";
 import {stringify} from "qs";
 import ModelContext from "./ModelContext";
 import IHttpClient from "../net/IHttpClient";
-import {isEmpty} from "lodash";
 
 class ModelRetriever implements IModelRetriever {
 
     constructor(private httpClient: IHttpClient,
-                private notificationManager: INotificationManager,
-                private parametersDeserializer: IParametersDeserializer = new NullParametersDeserializer()) {
+                private notificationManager: INotificationManager) {
 
     }
 
-    modelFor<T>(context: ModelContext): Observable<T> {
-        return this.notificationManager.notificationsFor(context)
-            .selectMany(notification => this.httpClient.get(notification.url + this.buildQueryForContext(context, notification.notificationKey)))
+    modelFor<T>(context: ModelContext, notificationKey?: string): Observable<T> {
+        let qs = stringify(context.parameters),
+            lastTimestamp = null;
+        return this.notificationManager.notificationsFor(context, notificationKey)
+            .filter(notification => notification.timestamp >= lastTimestamp)
+            .do(notification => lastTimestamp = notification.timestamp)
+            .selectMany(notification => this.httpClient.get(notification.url + (qs ? `?${qs}` : "")))
             .map(response => <T>response.response);
-    }
-
-    private buildQueryForContext(context: ModelContext, notificationKey: string): string {
-        let parameters: any = this.parametersDeserializer.deserialize(context) || {};
-        if (notificationKey)
-            parameters.modelKey = notificationKey;
-        return isEmpty(parameters) ? "" : `?${stringify(parameters)}`;
     }
 }
 

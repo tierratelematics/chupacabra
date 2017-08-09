@@ -9,26 +9,25 @@ export class ModelContext {
 }
 
 export interface IModelRetriever {
-    modelFor<T>(context: ModelContext): Observable<T>;
+    modelFor<T>(context: ModelContext, notificationKey?: string): Observable<T>;
 }
 
 export class ModelRetriever implements IModelRetriever {
 
-    constructor(httpClient: IHttpClient, notificationManager: INotificationManager,
-                parametersDeserializer: IParametersDeserializer);
+    constructor(httpClient: IHttpClient, notificationManager: INotificationManager);
 
-    modelFor<T>(context: ModelContext): Observable<T>;
+    modelFor<T>(context: ModelContext, notificationKey?: string): Observable<T>;
 }
 
 export interface INotificationManager {
-    notificationsFor(context: ModelContext): Observable<Notification>;
+    notificationsFor(context: ModelContext, notificationKey?: string): Observable<Notification>;
 }
 
 export class NotificationManager implements INotificationManager {
 
     constructor(client: SocketIOClient.Socket);
 
-    notificationsFor(context: ModelContext): Observable<Notification>;
+    notificationsFor(context: ModelContext, notificationKey?: string): Observable<Notification>;
 }
 
 interface Notification {
@@ -36,16 +35,11 @@ interface Notification {
     notificationKey: string;
 }
 
-export interface IParametersDeserializer {
-    deserialize(context: ModelContext): object;
-}
-
 export interface IHttpClient {
     get(url: string, headers?: Dictionary<string>): Observable<HttpResponse>
 }
 
 export class HttpClient implements IHttpClient {
-
     get(url: string, headers?: Dictionary<string>): Observable<HttpResponse>;
 }
 
@@ -57,4 +51,8 @@ export class HttpResponse<T> {
 
 interface Dictionary<T> {
     [index: string]: T;
+}
+
+export class ContextOperations {
+    static keyFor(context: ModelContext, notificationKey?: string): string;
 }
