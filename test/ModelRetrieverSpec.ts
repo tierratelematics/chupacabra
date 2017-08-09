@@ -25,7 +25,7 @@ describe("Model retriever, given an area and a model id", () => {
 
     context("when requesting a context", () => {
         beforeEach(() => {
-            notificationManager.setup(n => n.notificationsFor(It.isAny())).returns(context => {
+            notificationManager.setup(n => n.notificationsFor(It.isAny(), undefined)).returns(context => {
                 return Observable.just({
                     url: "http://testurl/",
                     notificationKey: context.parameters ? context.parameters.id : "",
@@ -64,7 +64,7 @@ describe("Model retriever, given an area and a model id", () => {
 
     context("when messsages are sent out of order", () => {
         beforeEach(() => {
-            notificationManager.setup(n => n.notificationsFor(It.isAny())).returns(context => Observable.create(observer => {
+            notificationManager.setup(n => n.notificationsFor(It.isAny(), undefined)).returns(context => Observable.create(observer => {
                 observer.onNext({
                     url: "http://testurl/100",
                     notificationKey: null,
@@ -92,7 +92,7 @@ describe("Model retriever, given an area and a model id", () => {
         });
         context("when it's the first received", () => {
             beforeEach(() => {
-                notificationManager.setup(n => n.notificationsFor(It.isAny())).returns(context => Observable.create(observer => {
+                notificationManager.setup(n => n.notificationsFor(It.isAny(), undefined)).returns(context => Observable.create(observer => {
                     observer.onNext({
                         url: "http://testurl/100",
                         notificationKey: null,
@@ -108,7 +108,7 @@ describe("Model retriever, given an area and a model id", () => {
         });
         context("when it's not the first received", () => {
             beforeEach(() => {
-                notificationManager.setup(n => n.notificationsFor(It.isAny())).returns(context => Observable.create(observer => {
+                notificationManager.setup(n => n.notificationsFor(It.isAny(), undefined)).returns(context => Observable.create(observer => {
                     observer.onNext({
                         url: "http://testurl/100",
                         notificationKey: null,
