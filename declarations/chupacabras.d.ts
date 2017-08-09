@@ -52,3 +52,7 @@ export class HttpResponse<T> {
 interface Dictionary<T> {
     [index: string]: T;
 }
+
+export class ContextOperations {
+    static getRoom(context: ModelContext, notificationKey?: string): string;
+}
