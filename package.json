@@ -2,10 +2,6 @@
   "name": "chupacabras",
   "version": "2.0.0-1",
   "dependencies": {
-    "@types/lodash": "4.14.64",
-    "@types/node": "~6.0.52",
-    "@types/qs": "~6.2.30",
-    "@types/socket.io-client": "~1.4.29",
     "isomorphic-fetch": "~2.2.1",
     "lodash": "~4.10.0",
     "qs": "~6.4.0",
@@ -13,6 +9,10 @@
     "socket.io-client": "~1.4.6"
   },
   "devDependencies": {
+    "@types/lodash": "4.14.64",
+    "@types/node": "~6.0.52",
+    "@types/qs": "~6.2.30",
+    "@types/socket.io-client": "~1.4.29",
     "@types/expect.js": "~0.3.29",
     "@types/mocha": "~2.2.34",
     "expect.js": "~0.3.1",
