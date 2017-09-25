@@ -1,3 +1,7 @@
+# 2.0.0
+
+Prettygoat 4 alignment
+
 # 1.0.1
 
 Propagate connection error
