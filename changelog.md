@@ -1,3 +1,7 @@
+# 2.0.1
+
+Remove timestamp filtering
+
 # 2.0.0
 
 Prettygoat 4 alignment
