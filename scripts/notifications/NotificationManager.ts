@@ -22,11 +22,11 @@ class NotificationManager implements INotificationManager {
         return this.getConnectionObservable()
             .take(1)
             .flatMap(() => Observable.fromEvent<Notification>(this.client, ContextOperations.keyFor(context, notificationKey)))
+            .filter(notification => idempotenceFilter.filter(notification))
             .map(notification => {
                 notification.timestamp = notification.timestamp ? new Date(notification.timestamp) : null;
                 return notification;
-            })
-            .filter(notification => idempotenceFilter.filter(notification));
+            });
     }
 
     private getConnectionObservable(): Observable<void> {
