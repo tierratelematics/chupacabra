@@ -1,7 +1,8 @@
 {
   "name": "chupacabras",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "dependencies": {
+    "CBuffer": "~2.0.0",
     "isomorphic-fetch": "~2.2.1",
     "lodash": "~4.10.0",
     "qs": "~6.4.0",
@@ -21,6 +22,6 @@
   "scripts": {
     "test": "smild test"
   },
-  "main": "dist/chupacabras.js",
-  "typings": "declarations/chupacabras.ts"
+  "main": "dist",
+  "typings": "dist"
 }
