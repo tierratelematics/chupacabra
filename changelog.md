@@ -1,3 +1,7 @@
+# 2.1.0
+
+Add ringbuffer for notifications filtering
+
 # 2.0.1
 
 Remove timestamp filtering
