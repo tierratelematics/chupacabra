@@ -14,7 +14,7 @@ class HttpClient implements IHttpClient {
         let promise = fetch(url, {
             method: method,
             body: body,
-            headers: headers
+            headers: <any>headers
         }).then(response => {
             let head: Dictionary<string> = {};
             response.headers.forEach((value, name) => {
