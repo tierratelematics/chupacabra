@@ -34,11 +34,22 @@ describe("Given an idempotence filter", () => {
     context("when a notification does not have an event id", () => {
         it("should be processed", () => {
             expect(subject.filter({
-                url: "", notificationKey: "", timestamp: null
+                url: "", notificationKey: "", timestamp: new Date(10)
             })).to.be(true);
             expect(subject.filter({
-                url: "", notificationKey: "", timestamp: null
+                url: "", notificationKey: "", timestamp: new Date(22)
             })).to.be(true);
+        });
+    });
+
+    context("when an initial notification has already been processed", () => {
+        it("should not process the subsequents initial notifications", () => {
+            expect(subject.filter({
+                eventId: null, url: "", notificationKey: "", timestamp: null
+            })).to.be(true);
+            expect(subject.filter({
+                eventId: null, url: "", notificationKey: "", timestamp: null
+            })).to.be(false);
         });
     });
 });

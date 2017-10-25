@@ -3,7 +3,6 @@ import Notification from "./Notification";
 import {Observable} from "rx";
 import ModelContext from "../model/ModelContext";
 import ContextOperations from "../util/ContextOperations";
-import {IdempotenceFilter} from "./IdempotenceFilter";
 
 class NotificationManager implements INotificationManager {
 
@@ -18,11 +17,8 @@ class NotificationManager implements INotificationManager {
     }
 
     protected getNotificationStream(context: ModelContext, notificationKey: string): Observable<Notification> {
-        let idempotenceFilter = new IdempotenceFilter();
         return this.getConnectionObservable()
-            .take(1)
             .flatMap(() => Observable.fromEvent<Notification>(this.client, ContextOperations.keyFor(context, notificationKey)))
-            .filter(notification => idempotenceFilter.filter(notification))
             .map(notification => {
                 notification.timestamp = notification.timestamp ? new Date(notification.timestamp) : null;
                 return notification;
@@ -33,11 +29,9 @@ class NotificationManager implements INotificationManager {
         return Observable.create<void>((observer) => {
             if (this.client.connected) {
                 observer.onNext(null);
-            } else {
-                this.client.on("connect", () => observer.onNext(null));
-                this.client.on("connect_error", error => observer.onError(error));
-                this.client.on("disconnect", error => observer.onError(error));
             }
+            this.client.on("connect", () => observer.onNext(null));
+            this.client.on("disconnect", error => observer.onError(error));
         });
     }
 
