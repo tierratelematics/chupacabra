@@ -1,3 +1,7 @@
+# 2.2.0
+
+Retry prettygoat connection on errors
+
 # 2.1.0
 
 Add ringbuffer for notifications filtering
