@@ -1,10 +1,10 @@
 {
   "name": "chupacabras",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "dependencies": {
     "CBuffer": "~2.0.0",
     "isomorphic-fetch": "~2.2.1",
-    "lodash": "~4.10.0",
+    "lodash": "^4.17.5",
     "qs": "~6.4.0",
     "rx": "~4.1.0",
     "socket.io-client": "~1.4.6"
