@@ -1,3 +1,7 @@
+# 2.2.1
+
+Avoid duplicated lodash versions
+
 # 2.2.0
 
 Retry prettygoat connection on errors
